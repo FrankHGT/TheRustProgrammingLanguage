@@ -26,8 +26,35 @@ fn main() {
     // array
     let a = [1, 2, 3, 4, 5];
 
-    let index = 10;
+    let index = 4;
     let element = a[index];
 
     println!("The value of element is: {}", element);
+
+    another_function(5);
+
+    // expression
+    let x = 5;
+    let y = {
+        let x = 3;
+        x + 1 // no ; end of line, or expression will turn to statement
+    };
+
+    println!("The value of x is: {} y is: {}", x, y);
+
+    println!("Result of five(): {}", five());
+
+    println!("Result of plus_one(5): {}", plus_one(5));
+}
+
+fn another_function(x: i32) {
+    println!("Another function was called. x: {}", x);
+}
+
+fn five() -> i32 { 
+    5
+}
+
+fn plus_one(x: i32) -> i32 {
+    x + 1
 }
