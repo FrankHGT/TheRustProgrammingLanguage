@@ -121,7 +121,7 @@ fn string_slice() {
     // we can clear it, cause index isn't a reference
     s.clear();
     // will panic, cause s has been cleared
-    // println!("end of first word: {}", s.as_bytes()[index - 1]);
+    // println!("end of first word: {}", s.as_bytes()[index - 1] as char);
 
     s = String::from("frank hgt");
 
