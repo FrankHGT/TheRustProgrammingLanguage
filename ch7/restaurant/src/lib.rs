@@ -85,3 +85,13 @@ pub fn eat_at_restaurant() {
     let mut map: HashMap<i32, i32> = HashMap::new();
     map.insert(1, 2);
 }
+
+use std::fmt::Result;
+// different from other Result
+use std::io::Result as IoResult;
+// fn function1() -> Result {
+// }
+
+// fn function2() -> IoResult<()> {
+
+// }
