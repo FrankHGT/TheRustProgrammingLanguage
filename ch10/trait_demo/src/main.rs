@@ -36,4 +36,36 @@ fn main() {
     notify(&news);
     print_author(&news);
     notify3(news);
+
+    let some_summarizable = returns_summarizable();
+    println!("some summarizable: {}", some_summarizable.summarize());
 }
+
+fn returns_summarizable() -> impl Summary {
+    Tweet {
+        username: String::from("horse_ebooks"), 
+        content: String::from("of course, as you probably already know, people"),
+        reply: false,
+        retweet: false,
+    }
+}
+
+// can't return different type, even they all impl Summary
+// fn returns_summarizable2(switch: bool) -> impl Summary {
+//     if switch {
+//         NewsArticle {
+//             headline: String::from("Penguins win the Stanley Cup Championship!"),
+//             location: String::from("Pittsburgh, PA, USA"),
+//             author: String::from("Iceburgh"),
+//             content: String::from("The Pittsburgh Penguins once again are the best
+//             hockey team in the NHL."),
+//         }
+//     } else {
+//         Tweet {
+//             username: String::from("horse_ebooks"),
+//             content: String::from("of course, as you probably already know, people"),
+//             reply: false,
+//             retweet: false,
+//         }
+//     }
+// }
