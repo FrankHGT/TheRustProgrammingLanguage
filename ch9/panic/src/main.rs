@@ -1,4 +1,6 @@
+use core::panic;
 use std::{fs::File, error};
+use std::io::ErrorKind;
 
 fn main() {
     // panic!("crash and burn");
@@ -16,8 +18,12 @@ fn handle_error() {
 
     let f = match f {
         Ok(file) => file,
-        Err(error) => {
-            panic!("There was a problem opening the file: {:?}", error)
+        Err(error) => match error.kind() {
+            ErrorKind::NotFound => match File::create("hello.txt") {
+                Ok(fc) => fc,
+                Err(e) => panic!("Tried to create file but there was a problem: {:?}", e),
+            },
+            other_error => panic!("There was a problem opening the file: {:?}", other_error),
         },
     };
 }
