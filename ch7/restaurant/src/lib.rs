@@ -1,3 +1,5 @@
+mod front_of_house;
+
 pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
@@ -10,22 +12,6 @@ mod tests {
     fn it_works() {
         let result = add(2, 2);
         assert_eq!(result, 4);
-    }
-}
-
-mod front_of_house {
-    pub mod hosting {
-        pub fn add_to_waitlist() {}
-
-        fn seat_at_table() {}
-    }
-
-    pub mod serving {
-        fn take_order() {}
-
-        pub fn serve_order() {}
-
-        fn take_payment() {}
     }
 }
 
@@ -60,11 +46,11 @@ mod back_of_house {
     fn cook_order() {}
 }
 
-// use crate::front_of_house::hosting;
+use crate::front_of_house::hosting;
 
 use std::collections::HashMap;
 
-use front_of_house::hosting;
+// use front_of_house::hosting;
 
 pub fn eat_at_restaurant() {
     // absolute path
@@ -99,7 +85,7 @@ use std::io::Result as IoResult;
 // nest use
 use std::{cmp::Ordering, io};
 // use self with nest
-use std::io::{self, Write};
+use std::io::Write;
 // wildcard use
 use std::collections::*;
 
