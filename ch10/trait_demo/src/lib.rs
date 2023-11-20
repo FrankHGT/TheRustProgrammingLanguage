@@ -74,6 +74,6 @@ pub fn print_author2<T: Summary>(item1: &T, item2: &T) {
 pub fn notify3(item: impl Summary + Display) {
     println!("Display for item: {}", item);
 }
-pub fn print_author3<T: Summary + Display>(item: T) {
+pub fn print_author3<T: Summary + Display>(_item: T) {
     println!("Test")
 }
