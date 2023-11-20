@@ -95,3 +95,11 @@ use std::io::Result as IoResult;
 // fn function2() -> IoResult<()> {
 
 // }
+
+// nest use
+use std::{cmp::Ordering, io};
+// use self with nest
+use std::io::{self, Write};
+// wildcard use
+use std::collections::*;
+
