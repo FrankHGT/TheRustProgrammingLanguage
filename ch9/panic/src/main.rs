@@ -1,6 +1,8 @@
 use core::panic;
 use std::{fs::File, error};
 use std::io::{ErrorKind, self, Read};
+use std::io;
+use std::fs;
 
 fn main() {
     // panic!("crash and burn");
@@ -47,9 +49,5 @@ fn propagate_error() {
 }
 
 fn read_username_from_file() -> Result<String, io::Error> {
-    let mut s = String::new();
-
-    File::open("hello.txt")?.read_to_string(&mut s)?;
-
-    Ok(s)
+    fs::read_to_string("hello.txt")
 }
