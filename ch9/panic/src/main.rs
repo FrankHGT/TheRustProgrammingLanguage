@@ -10,7 +10,9 @@ fn main() {
     // execute cargo run and see output
     // v[99];
 
-    handle_error();
+    // handle_error();
+
+    unwrap_and_expect();
 }
 
 fn handle_error() {
@@ -26,4 +28,11 @@ fn handle_error() {
             other_error => panic!("There was a problem opening the file: {:?}", other_error),
         },
     };
+}
+
+fn unwrap_and_expect() {
+    // let f = File::open("hello_again.txt").unwrap();
+
+    // expect is better than unwrap?
+    let f = File::open("hello_again.txt").expect("Failed to open hello.txt");
 }
