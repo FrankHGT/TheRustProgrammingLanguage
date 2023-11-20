@@ -1,6 +1,6 @@
 use core::panic;
 use std::{fs::File, error};
-use std::io::ErrorKind;
+use std::io::{ErrorKind, self, Read};
 
 fn main() {
     // panic!("crash and burn");
@@ -12,7 +12,9 @@ fn main() {
 
     // handle_error();
 
-    unwrap_and_expect();
+    // unwrap_and_expect();
+
+    propagate_error();
 }
 
 fn handle_error() {
@@ -35,4 +37,27 @@ fn unwrap_and_expect() {
 
     // expect is better than unwrap?
     let f = File::open("hello_again.txt").expect("Failed to open hello.txt");
+}
+
+fn propagate_error() {
+    match read_username_from_file() {
+        Ok(username) => println!("username: {}", username),
+        Err(e) => println!("Error when read username: {}", e),
+    }
+}
+
+fn read_username_from_file() -> Result<String, io::Error> {
+    let f= File::open("hello.txt");
+
+    let mut f = match f {
+        Ok(file) => file,
+        Err(e) => return Err(e),
+    };
+
+    let mut s = String::new();
+
+    match f.read_to_string(&mut s) {
+        Ok(_) => Ok(s),
+        Err(e) => Err(e),
+    }
 }
