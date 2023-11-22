@@ -25,6 +25,11 @@ impl Rectangle {
     }
 }
 
+fn prints_and_returns_10(a: i32) -> i32 {
+    println!("I got the value {}", a);
+    10
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -36,6 +41,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn it_works() -> Result<(), String> {
         // use Result to avoid panic
         if 2 + 2 == 5 {
@@ -84,5 +90,26 @@ mod tests {
     #[should_panic(expected = "Guess value must be less than or equal to 100")]
     fn greater_than_100() {
         Guess::new(200);
+    }
+
+    #[test]
+    fn this_test_will_pass() {
+        let value = prints_and_returns_10(100000);
+        assert_eq!(10, value);
+    }
+
+    #[test]
+    #[ignore]
+    fn this_test_will_fail() {
+        let value = prints_and_returns_10(111);
+        assert_eq!(5, value);
+    }
+}
+
+#[cfg(test)]
+mod another_test_mod {
+    #[test]
+    fn test_in_another_test_mod() {
+        assert_eq!(1, 1)
     }
 }
