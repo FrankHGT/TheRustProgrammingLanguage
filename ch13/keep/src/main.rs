@@ -1,4 +1,4 @@
-use std::{thread, time::Duration, collections::HashMap};
+use std::{thread, time::Duration, collections::HashMap, hash::Hash};
 
 fn main() {
     let simulated_user_specified_value = 10;
@@ -13,29 +13,33 @@ fn main() {
     move_keyword();
 }
 
-struct Cacher<T>
-    where T: Fn(u32) -> u32
+struct Cacher<T, U, V>
+    where T: Fn(U) -> V,
+    U: Eq + PartialEq + Hash + Clone + Copy,
+    V: Clone + Copy,
 {
     calculation: T,
-    value_map: HashMap<u32, u32>,
+    value_map: HashMap<U, V>,
 }
 
-impl<T> Cacher<T>
-    where T: Fn(u32) -> u32
+impl<T, U, V> Cacher<T, U, V>
+    where T: Fn(U) -> V,
+    U: Eq + PartialEq + Hash + Clone + Copy,
+    V: Clone + Copy,
 {
-    fn new(calculation: T) -> Cacher<T> {
+    fn new(calculation: T) -> Cacher<T, U, V> {
         Cacher {
             calculation,
             value_map: HashMap::new(),
         }
     }
 
-    fn value(&mut self, arg: u32) -> u32 {
+    fn value(&mut self, arg: U) -> V {
         match self.value_map.get(&arg) {
-            Some(v) => *v,
+            Some(v) => v.clone(),
             None => {
                 let v = (self.calculation)(arg);
-                self.value_map.insert(arg, v);
+                self.value_map.insert(arg.clone(), v);
                 v
             }
         }
@@ -73,7 +77,7 @@ fn generate_workout(intensity: u32, random_number: u32) {
 }
 
 fn capture_value() {
-    let mut x = 4;
+    let x = 4;
 
     let equal_to_x = |z| z == x;
     // can't capture dynamic environment in a fn item
@@ -98,4 +102,16 @@ fn move_keyword() {
     let y = vec![1, 2, 3];
 
     assert!(equal_to_x(y));
+}
+
+#[test]
+fn cacher_and_hold_other_type() {
+    let mut cacher = Cacher::new(|value| {
+        println!("value: {:?}", value);
+        thread::sleep(Duration::from_secs(1));
+        value
+    });
+
+    let res = cacher.value("didudidu");
+    println!("res: {:?}", res);
 }
