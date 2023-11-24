@@ -1,6 +1,4 @@
-use std::ops::Deref;
-
-use smartpointer::{List::{Cons, Nil}, MyBox};
+use smartpointer::{List::{Cons, Nil}, MyBox, CustomSmartPointer};
 
 fn box_smartpointer() {
     let b = Box::new(5);
@@ -62,6 +60,20 @@ fn normal_reference() {
     assert_eq!(5, *y);
 }
 
+fn drop_trait() {
+    let _c = CustomSmartPointer { data: String::from("my stuff") };
+    let _d = CustomSmartPointer { data: String::from("other stuff") };
+
+    println!("CustomSmartPointer created.");
+}
+
+fn drop_early() {
+    let c = CustomSmartPointer { data: String::from("some data") };
+    println!("CustomSmartPointer created.");
+    drop(c);
+    println!("CustomSmartPointer dropped before the end of main.");
+}
+
 fn main() {
     box_smartpointer();
 
@@ -70,4 +82,8 @@ fn main() {
     reference_and_dereference();
 
     deref_coercion();
+
+    drop_trait();
+
+    drop_early();
 }
