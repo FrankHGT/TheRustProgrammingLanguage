@@ -1,4 +1,6 @@
-use smartpointer::{List::{Cons, Nil}, MyBox, CustomSmartPointer};
+use std::rc::Rc;
+
+use smartpointer::{List::{Cons, Nil}, MyBox, CustomSmartPointer, RcList};
 
 fn box_smartpointer() {
     let b = Box::new(5);
@@ -74,6 +76,18 @@ fn drop_early() {
     println!("CustomSmartPointer dropped before the end of main.");
 }
 
+fn rc_smartpointer() {
+    let a = Rc::new(RcList::Cons(5, Rc::new(RcList::Cons(10, Rc::new(RcList::Nil)))));
+    println!("rc after creating a = {}", Rc::strong_count(&a));
+    let _b = RcList::Cons(3, Rc::clone(&a));
+    println!("rc after creating b = {}", Rc::strong_count(&a));
+    {
+        let _c = RcList::Cons(4, Rc::clone(&a));
+        println!("rc after creating c = {}", Rc::strong_count(&a));
+    }
+    println!("rc after c goes out of scope = {}", Rc::strong_count(&a));
+}
+
 fn main() {
     box_smartpointer();
 
@@ -86,4 +100,6 @@ fn main() {
     drop_trait();
 
     drop_early();
+
+    rc_smartpointer();
 }

@@ -10,7 +10,12 @@ pub enum List {
     Nil,
 }
 
-use std::ops::Deref;
+pub enum RcList {
+    Cons(i32, Rc<RcList>),
+    Nil,
+}
+
+use std::{ops::Deref, rc::Rc};
 
 // tuple struct, use struct as a tuple
 // it's behavior like tuple, with a struct name
