@@ -1,4 +1,4 @@
-use std::{cell::RefCell, rc::Rc};
+use std::{cell::RefCell, rc::{Rc, Weak}};
 
 #[derive(Debug)]
 pub enum List {
@@ -13,4 +13,11 @@ impl List {
             List::Nil => None,
         }
     }
+}
+
+#[derive(Debug)]
+pub struct Node {
+    pub value: i32,
+    pub parent: RefCell<Weak<Node>>,
+    pub children: RefCell<Vec<Rc<Node>>>,
 }
