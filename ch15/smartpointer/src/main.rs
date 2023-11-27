@@ -1,6 +1,6 @@
-use std::rc::Rc;
+use std::{rc::Rc, cell::RefCell};
 
-use smartpointer::{List::{Cons, Nil}, MyBox, CustomSmartPointer, RcList};
+use smartpointer::{List::{Cons, Nil}, MyBox, CustomSmartPointer, RcList, MutableList};
 
 fn box_smartpointer() {
     let b = Box::new(5);
@@ -88,6 +88,37 @@ fn rc_smartpointer() {
     println!("rc after c goes out of scope = {}", Rc::strong_count(&a));
 }
 
+fn ref_alongside_refmut() {
+    let value = Rc::new(RefCell::new(5));
+
+    let a = Rc::new(MutableList::Cons(Rc::clone(&value), Rc::new(MutableList::Nil)));
+
+    let b = MutableList::Cons(Rc::new(RefCell::new(6)), Rc::clone(&a));
+    let c = MutableList::Cons(Rc::new(RefCell::new(10)), Rc::clone(&a));
+
+    // explain:
+    // 1. borrow_mut's function signature indicate it's need a &self
+    // 2. Rust compile will automaiclly insert * operator to dereference it,
+    // ie: (*value).borrow_mut(), 
+    // 3. cause Rc<T> impl Deref trait, it will turn to RefCell<T>.borrow_mut() (just for example)
+    // this function called automatic reference and dereference(mentioned in ch5)
+    // 4. borrow_mut() will return a RefMut<T>, *(value.borrow_mut()) will turn to &mut i32
+    *value.borrow_mut() += 10;
+    // 1. unpack b.next from &Rc<MutableList> => &MutableList
+    // 2. &Rc<RefCell<i32>> => &mut i32
+    match &b {
+        MutableList::Cons(_, next) => match next.as_ref() {
+            MutableList::Cons(v, _n) => *v.borrow_mut() += 10,
+            MutableList::Nil => panic!("a is Nil"),
+        },
+        MutableList::Nil => panic!("b is Nil"),
+    }
+
+    println!("a after = {:?}", a);
+    println!("b after = {:?}", b);
+    println!("c after = {:?}", c);
+}
+
 fn main() {
     box_smartpointer();
 
@@ -102,4 +133,6 @@ fn main() {
     drop_early();
 
     rc_smartpointer();
+
+    ref_alongside_refmut();
 }

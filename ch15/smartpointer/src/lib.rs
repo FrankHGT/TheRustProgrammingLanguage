@@ -17,7 +17,13 @@ pub enum RcList {
     Nil,
 }
 
-use std::{ops::Deref, rc::Rc};
+#[derive(Debug)]
+pub enum MutableList {
+    Cons(Rc<RefCell<i32>>, Rc<MutableList>),
+    Nil,
+}
+
+use std::{ops::Deref, rc::Rc, cell::RefCell};
 
 // tuple struct, use struct as a tuple
 // it's behavior like tuple, with a struct name
