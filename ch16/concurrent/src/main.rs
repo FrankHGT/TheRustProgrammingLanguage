@@ -1,4 +1,4 @@
-use std::{thread, time::Duration};
+use std::{thread, time::Duration, sync::mpsc};
 
 fn pass_data_to_thread() {
     let v = vec![1, 2, 3];
@@ -32,8 +32,25 @@ fn create_thread() {
     handle.join().unwrap();
 }
 
+fn message_passing() {
+    // mpsc for multiple producer, single consumer
+    let (tx, rx) = mpsc::channel();
+
+    thread::spawn(move || {
+        let val = String::from("hi");
+        tx.send(val).unwrap();
+        // moved in channel already
+        // println!("val is {}", val);
+    });
+
+    let received = rx.recv().unwrap();
+    println!("Got: {}", received);
+}
+
 fn main() {
     create_thread();
 
     pass_data_to_thread();
+
+    message_passing();
 }
