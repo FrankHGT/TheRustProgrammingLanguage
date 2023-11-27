@@ -36,6 +36,26 @@ fn message_passing() {
     // mpsc for multiple producer, single consumer
     let (tx, rx) = mpsc::channel();
 
+    let tx1 = mpsc::Sender::clone(&tx);
+    thread::spawn(move || {
+        let vals = vec![
+            String::from("more"),
+            String::from("messages"),
+            String::from("for"),
+            String::from("you"),
+        ];
+
+        for val in vals {
+            tx1.send(val).unwrap();
+            thread::sleep(Duration::from_secs(1));
+        }
+        
+        // moved in to channel already
+        // for val in vals {
+        //     println!("val in vals {}", val);
+        // }
+    });
+
     thread::spawn(move || {
         let vals = vec![
             String::from("hi"),
