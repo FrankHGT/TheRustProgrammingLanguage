@@ -1,5 +1,6 @@
 use std::{rc::Rc, cell::RefCell};
 
+mod circular_reference;
 use smartpointer::{List::{Cons, Nil}, MyBox, CustomSmartPointer, RcList, MutableList};
 
 fn box_smartpointer() {
@@ -119,6 +120,33 @@ fn ref_alongside_refmut() {
     println!("c after = {:?}", c);
 }
 
+fn circular_reference() {
+    use circular_reference::List::Cons as CCons;
+    use circular_reference::List::Nil as CNil;
+
+    let a = Rc::new(CCons(5, RefCell::new(Rc::new(CNil))));
+
+    println!("a initial rc count = {}", Rc::strong_count(&a));
+    println!("a next item = {:?}", a.tail());
+
+    let b = Rc::new(CCons(10, RefCell::new(Rc::clone(&a))));
+
+    println!("a rc count after b creation = {}", Rc::strong_count(&a));
+    println!("b initial rc count = {}", Rc::strong_count(&b));
+    println!("b next item = {:?}", b.tail());
+
+    if let Some(link) = a.tail() {
+        *link.borrow_mut() = Rc::clone(&b);
+    }
+
+    println!("b rc count after changing a = {}", Rc::strong_count(&b));
+    println!("a rc count after changing a = {}", Rc::strong_count(&a));
+
+    // will trigger stack overflow, cause Debug trait
+    // will recursivly print next item!
+    // println!("a next item = {:?}", a.tail());
+}
+
 fn main() {
     box_smartpointer();
 
@@ -135,4 +163,6 @@ fn main() {
     rc_smartpointer();
 
     ref_alongside_refmut();
+
+    circular_reference();
 }
