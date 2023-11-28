@@ -1,3 +1,4 @@
+mod mutex;
 use std::{thread, time::Duration, sync::mpsc};
 
 fn pass_data_to_thread() {
@@ -86,4 +87,6 @@ fn main() {
     pass_data_to_thread();
 
     message_passing();
+
+    mutex::run();
 }
