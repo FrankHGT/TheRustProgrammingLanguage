@@ -6,6 +6,11 @@ pub struct Screen {
     pub components: Vec<Box<dyn Draw>>,
 }
 
+// can not trun Clone into object, cause Clone is not a object-safe trait
+// pub struct ScreenNotObjectSafe {
+//     pub components: Vec<Box<dyn Clone>>,
+// }
+
 impl Screen {
     pub fn run(&self) {
         for component in self.components.iter() {
