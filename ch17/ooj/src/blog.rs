@@ -49,6 +49,14 @@ trait State {
     }
 }
 
+// this is like static method, call with State::reject(s), it's not what we want
+// impl dyn State {
+//     // why i can return self in here, but can't return self above(in trait State reject)?
+//     fn reject(self: Box<Self>) -> Box<dyn State> {
+//         self
+//     }
+// }
+
 struct Draft {}
 
 impl State for Draft {
